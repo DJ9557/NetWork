@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-//#define kServerUrl @"http://211.157.167.147:60001/beacon2/%@"
-#define kServerUrl @"http://192.168.1.58:8080/beacon2/%@"
+#define kServerUrl @"http://192.168.1.58:8080/%@"
+//
 
 @protocol RequestDelegate;
 
