@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#define kServerUrl @"http://192.168.1.58:8080/%@"
-//
-
 @protocol RequestDelegate;
 
 typedef enum : NSUInteger {
@@ -29,7 +26,7 @@ typedef void(^CompletedCallBack)(NSData *response);
 /**
  *  请求失败的回调block
  *
- *  @param errorCode 错误码
+ *  @param errorCode 错误码   
  */
 typedef void(^FailedCallBack)(ErrorCode code);
 
@@ -55,6 +52,13 @@ typedef void(^FailedCallBack)(ErrorCode code);
 @property (assign,nonatomic,readonly) BOOL isLoading;
 
 /**
+ *  方便以后请求，不需要再输完整的URL。
+ *
+ *  @param url 服务器地址
+ */
++ (void)initializeWithServerUrl:(NSString*)url;
+
+/**
  *  实例化对象
  *
  *  @param url      完整的URL
@@ -74,7 +78,7 @@ typedef void(^FailedCallBack)(ErrorCode code);
  *  @param useCache 是否优先使用缓存
  *  @param callBack 请求完成后调用的block
  */
-+ (void)getWithUrl:(NSString*)url UseCache:(BOOL)useCache CallBack:(CompletedCallBack)callBack;
++ (void)getWithUrl:(NSString*)url UseCache:(BOOL)useCache Succese:(CompletedCallBack)succese Failed:(FailedCallBack)failed;
 
 /**
  *  发起一个post请求
@@ -83,7 +87,8 @@ typedef void(^FailedCallBack)(ErrorCode code);
  *  @param body     请求体，Json字符串
  *  @param callBack 请求完成后调用的block
  */
-+ (void)postWithUrl:(NSString*)url Body:(NSString*)body CallBack:(CompletedCallBack)callBack;
++ (void)postWithUrl:(NSString*)url Body:(NSString*)body Succese:(CompletedCallBack)succese Failed:(FailedCallBack)failed;
+;
 
 @end
 

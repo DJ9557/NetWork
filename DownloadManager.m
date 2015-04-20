@@ -28,7 +28,7 @@
     
     if (self) {
         self.url = url;
-//        NSLog(@"%@",url);
+
         self.filePath = path;
         self.responseData = [NSMutableData data];
         self.request = [[NSMutableURLRequest alloc]initWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:15];
@@ -51,16 +51,13 @@
 
 - (void)cancel
 {
-    self.connection = nil;
-    
-    [self.connection cancel];
-
-    if ([self.delegate respondsToSelector:@selector(downloadFailedWithCode:)]) {
-        [self.delegate downloadFailedWithCode:DidCanceled];
+    if (self.connection) {
+        [self.connection cancel];
+        
+        self.connection = nil;
     }
-    _isDownloading = NO;
     
-    self.delegate = nil;
+    _isDownloading = NO;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
@@ -73,6 +70,7 @@
     if ([self.delegate respondsToSelector:@selector(downloadProgress:Total:)]) {
         [self.delegate downloadProgress:((double)_responseData.length) / _total Total:_total];
     }
+
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -154,7 +152,7 @@
 
         totalSpace = [fileSystemSizeInBytes floatValue]/1024.0f/1024.0f;
         totalFreeSpace = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f;
-        NSLog(@"Memory Capacity of %f MB with %f MB Free memory available.", totalSpace, totalFreeSpace);
+
     } else {
         NSLog(@"Error Obtaining System Memory Info: Domain = %@, Code = %ld", [error domain], (long)[error code]);
     }

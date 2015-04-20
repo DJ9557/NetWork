@@ -1,8 +1,9 @@
 //
 //  ImageCache.h
+//  test
 //
-//  Created by qianfeng on 14-9-19.
-//  Copyright (c) 2014年 zbc. All rights reserved.
+//  Created by zhubch on 14-10-30.
+//  Copyright (c) 2014年 zhubch. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

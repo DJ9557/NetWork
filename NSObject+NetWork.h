@@ -21,7 +21,7 @@
 - (NSDictionary*)dictionary;
 
 /**
- *  进一步封装，直接把属性转成json
+ *  直接把属性转成json
  *
  *  @return json字符串
  */

@@ -1,9 +1,9 @@
 //
 //  ZBCImageCache.m
-//  iTravel
+//  test
 //
-//  Created by qianfeng on 14-9-19.
-//  Copyright (c) 2014年 zbc. All rights reserved.
+//  Created by zhubch on 14-10-30.
+//  Copyright (c) 2014年 zhubch. All rights reserved.
 //
 
 #import "ImageCache.h"
@@ -38,12 +38,14 @@ static ImageCache *cache = nil;
         [button setImage:imgDic[url] forState:UIControlStateNormal];
         return;
     }
-    [HttpRequest getWithUrl:url UseCache:YES CallBack:^(NSData *response) {
+    [HttpRequest getWithUrl:url UseCache:YES Succese:^(NSData *response) {
         UIImage *img = [UIImage imageWithData:response];
         if (img != nil) {
             [imgDic setObject:img forKey:url];
             [button setImage:img forState:UIControlStateNormal];
         }
+    } Failed:^(ErrorCode code) {
+        //
     }];
 }
 
@@ -62,19 +64,21 @@ static ImageCache *cache = nil;
         [imgDic setObject:imgView.image forKey:url];
         return;
     }
-    [HttpRequest getWithUrl:url UseCache:YES CallBack:^(NSData *response) {
+    [HttpRequest getWithUrl:url UseCache:YES Succese:^(NSData *response) {
         UIImage *img = [UIImage imageWithData:response];
         if (img != nil) {
             [imgDic setObject:img forKey:url];
             imgView.image = img;
             
             NSData *data = UIImagePNGRepresentation(img);
-
+            
             if (data == nil) {
                 data = UIImageJPEGRepresentation(img, 1);
             }
             [data writeToFile:path atomically:NO];
         }
+    } Failed:^(ErrorCode code) {
+        //
     }];
 }
 
@@ -106,7 +110,7 @@ static ImageCache *cache = nil;
         [imgDic setObject:[UIImage imageWithContentsOfFile:path] forKey:url];
         return;
     }
-    [HttpRequest getWithUrl:url UseCache:YES CallBack:^(NSData *response) {
+    [HttpRequest getWithUrl:url UseCache:YES Succese:^(NSData *response) {
         UIImage *img = [UIImage imageWithData:response];
         if (img != nil) {
             [imgDic setObject:img forKey:url];
@@ -118,6 +122,8 @@ static ImageCache *cache = nil;
             }
             [data writeToFile:path atomically:NO];
         }
+    } Failed:^(ErrorCode code) {
+        //
     }];
 }
 

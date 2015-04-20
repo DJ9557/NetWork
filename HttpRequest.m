@@ -7,7 +7,8 @@
 //
 
 #import "HttpRequest.h"
-#import <UIKit/UIKit.h>
+
+static NSString *serverUrl = @"";
 
 @interface HttpRequest () <NSURLConnectionDataDelegate>
 
@@ -17,8 +18,12 @@
 
 @end
 
-
 @implementation HttpRequest
+
++ (void)initializeWithServerUrl:(NSString *)url
+{
+    serverUrl = url;
+}
 
 - (id)initWithUrl:(NSString *)url Method:(NSString *)method UseCache:(BOOL)useCache
 {
@@ -26,21 +31,21 @@
         if (url.length < 4) {
             NSLog(@"你确定这URL能用? ->> url=%@",url);
         }
-        if (url.length > 4 && ![[url substringToIndex:4] isEqualToString:@"http"]) {
-            self.url = [NSString stringWithFormat:kServerUrl,url];
+        if (![[url substringToIndex:4] isEqualToString:@"http"]) {
+            self.url = [NSString stringWithFormat:serverUrl,url];
         }else {
             self.url = url;
         }
         
-//        NSLog(@"%@",self.url);
+        NSLog(@"%@",self.url);
         _isLoading = NO;
         
         self.responseData = [[NSMutableData alloc]init];
         
         if (useCache){
-            self.request = [[NSMutableURLRequest alloc]initWithURL:[NSURL URLWithString:self.url] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:5];
+            self.request = [[NSMutableURLRequest alloc]initWithURL:[NSURL URLWithString:self.url] cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:10];
         }else{
-           self.request = [[NSMutableURLRequest alloc]initWithURL:[NSURL URLWithString:self.url] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5];
+           self.request = [[NSMutableURLRequest alloc]initWithURL:[NSURL URLWithString:self.url] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10];
         }
         
         self.request.HTTPMethod = method;
@@ -67,18 +72,20 @@
 }
     #pragma mark 简便类方法
 
-+ (void)getWithUrl:(NSString *)url UseCache:(BOOL)useCache CallBack:(CompletedCallBack)callBack
++ (void)getWithUrl:(NSString *)url UseCache:(BOOL)useCache Succese:(CompletedCallBack)succese Failed:(FailedCallBack)failed
 {
     HttpRequest *request = [[HttpRequest alloc]initWithUrl:url Method:@"GET" UseCache:useCache];
-    request.completedCallBack = callBack;
+    request.completedCallBack = succese;
+    request.failedCallBack = failed;
     [request start];
 }
 
-+ (void)postWithUrl:(NSString *)url Body:(NSString *)body CallBack:(CompletedCallBack)callBack
++ (void)postWithUrl:(NSString *)url Body:(NSString *)body Succese:(CompletedCallBack)succese Failed:(FailedCallBack)failed
 {
     HttpRequest *request = [[HttpRequest alloc]initWithUrl:url Method:@"POST" UseCache:NO];
     request.jsonBody = body;
-    request.completedCallBack = callBack;
+    request.completedCallBack = succese;
+    request.failedCallBack = failed;
     [request start];
 }
 

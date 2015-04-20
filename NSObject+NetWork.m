@@ -54,7 +54,7 @@
 - (NSString *)json
 {
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[self dictionary] options:0 error:nil];
-    __autoreleasing NSString *json = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSString *json = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
     return json;
 }
 
